@@ -1,5 +1,5 @@
 #!/usr/bin/python
-
+import sys
 from mininet.topo import Topo
 from mininet.net import Mininet
 from mininet.log import setLogLevel
@@ -36,7 +36,7 @@ class SingleSwitchTopo(Topo):
 if __name__ == '__main__':
     setLogLevel('info')
     topo = SingleSwitchTopo()
-    c1 = RemoteController('c1', ip='192.168.56.1')
+    c1 = RemoteController('c1', ip=sys.argv[1])
     net = Mininet(topo=topo, controller=c1)
     net.start()
     CLI(net)
