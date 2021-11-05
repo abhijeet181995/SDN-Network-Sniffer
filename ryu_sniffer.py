@@ -3,34 +3,37 @@ from ryu.controller import ofp_event
 from ryu.controller.handler import CONFIG_DISPATCHER, MAIN_DISPATCHER
 from ryu.controller.handler import set_ev_cls
 from ryu.ofproto import ofproto_v1_3
-from ryu.lib.mac import haddr_to_bin
+# from ryu.lib.mac import haddr_to_bin
 from ryu.lib.packet import packet
 from ryu.lib.packet import arp
 from ryu.lib.packet import ethernet
-from ryu.lib.packet import ipv4
-from ryu.lib.packet import ipv6
-from ryu.lib.packet import ether_types
-from ryu.lib import mac, ip
-from ryu.topology.api import get_switch, get_link
-from ryu.app.wsgi import ControllerBase
+# from ryu.lib.packet import ipv4
+# from ryu.lib.packet import ipv6
+# from ryu.lib.packet import ether_types
+# from ryu.lib import mac, ip
+# from ryu.topology.api import get_switch, get_link
+# from ryu.app.wsgi import ControllerBase
 from ryu.topology import event
 
 from collections import defaultdict
-from operator import itemgetter
+# from operator import itemgetter
 
-import os
+# import os
 import random
 
 
 SNIFFER_SWITCH = int(input("Enter Sniffer Switch : "))
 SNIFFER_PORT = int(input("Enter Sniffer Port : "))
-print("Entered Sniffer Details",SNIFFER_SWITCH,SNIFFER_PORT)
+print("Entered Sniffer Details:\n","Sniffer connected to switch",SNIFFER_SWITCH,"at port",SNIFFER_PORT)
 
 
 class ProjectController(app_manager.RyuApp):
     OFP_VERSIONS = [ofproto_v1_3.OFP_VERSION]
 
     def __init__(self, *args, **kwargs):
+        '''
+            Data structures to store network information
+        '''
         super(ProjectController, self).__init__(*args, **kwargs)
         self.topology_api_app = self
         self.datapath_list = {}
@@ -41,7 +44,10 @@ class ProjectController(app_manager.RyuApp):
         self.group_ids = []
         self.adjacency = defaultdict(dict)
 
-    def bfs_shortest_path(self,start, goal):
+    def bfs_shortest_path(self,start,goal):
+        '''
+            To find shortest path between 2 switches identified by start and goal
+        '''
         explored = []
         queue = [[start]]
         
@@ -62,7 +68,9 @@ class ProjectController(app_manager.RyuApp):
             explored.append(node)
     
     def get_ports(self,path,first_port,last_port):
-        
+        '''
+            Get input and output port of each switch in path
+        '''
         d = {}
 
         portin = first_port
@@ -77,6 +85,9 @@ class ProjectController(app_manager.RyuApp):
 
 
     def add_ports_to_paths(self, paths, first_port, last_port):
+        '''
+            Merge the switch list paths and switchwise port information
+        '''
         print("paths recived = ", paths)
         paths_p = []
         paths_p.append(self.get_ports(paths[0],first_port,last_port))
@@ -84,6 +95,9 @@ class ProjectController(app_manager.RyuApp):
         return paths_p
 
     def generate_openflow_gid(self):
+        '''
+            Generate new group ID.
+        '''
         n = random.randint(0, 2**32)
         while n in self.group_ids:
             n = random.randint(0, 2**32)
@@ -91,6 +105,9 @@ class ProjectController(app_manager.RyuApp):
 
 #---------------------------------PATH INSTALLATION------------------------------------------
     def cal_path(self, src, first_port, dst, last_port, ip_src, ip_dst):
+        '''
+            Generate paths and install flows in each switch
+        '''
         paths = []
         paths.append(self.bfs_shortest_path(src, dst))
         paths.append(self.bfs_shortest_path(src,SNIFFER_SWITCH))
@@ -188,6 +205,9 @@ class ProjectController(app_manager.RyuApp):
 
 #--------------------------------Add Flow Method----------------------------
     def add_flow(self, datapath, priority, match, actions, buffer_id=None):
+        '''
+            Method to add flow to switch
+        '''
         # print "Adding flow ", match, actions
         ofproto = datapath.ofproto
         parser = datapath.ofproto_parser
@@ -238,14 +258,6 @@ class ProjectController(app_manager.RyuApp):
 
         out_port = ofproto.OFPP_FLOOD
 
-        """
-
-
-        
-        
-
-        """
-
         if arp_pkt:
             src_ip = arp_pkt.src_ip
             dst_ip = arp_pkt.dst_ip
@@ -264,7 +276,7 @@ class ProjectController(app_manager.RyuApp):
                     out_port = self.cal_path(h1[0], h1[1], h2[0], h2[1], src_ip, dst_ip)
                     self.cal_path(h2[0], h2[1], h1[0], h1[1], dst_ip, src_ip) # reverse
 
-        print(pkt)
+        # print(pkt)
 
         actions = [parser.OFPActionOutput(out_port)]
 
