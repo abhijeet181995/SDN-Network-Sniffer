@@ -6,6 +6,9 @@ A network packet sniffer designed for software defined networks that can sniff p
 - Sniffer can be attached at any location in the network.
 - Customizaton available for types,count of packets required to be monitored across the network.
 
+## ScreenShots
+![Screenshot](screenshot/topology.png)
+
 ## Environment requirements -
 * Python 3.8+ on controller machine and machine where mininet will run.
 * Ryu Framework on machine which is to act as controller, install by:`pip3 install ryu`.
