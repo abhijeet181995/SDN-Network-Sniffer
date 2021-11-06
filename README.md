@@ -6,7 +6,7 @@ A network packet sniffer designed for software defined networks that can sniff p
 - Sniffer can be attached at any location in the network.
 - Customizaton available for types,count of packets required to be monitored across the network.
 
-## ScreenShots
+## Screenshots
 ![Screenshot](screenshot/topology.png)
 
 ## Environment requirements -
