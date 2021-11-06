@@ -1,3 +1,5 @@
+For better experience, please open README.md
+
 # SDN-Network-Sniffer
 A network packet sniffer designed for software defined networks that can sniff packet for the whole network independent of the sniffer location.The sniffer can help us to monitor/detect malicious activities in the network.We can also debug or analyze network traffic for potensial errors.
 
@@ -8,19 +10,6 @@ A network packet sniffer designed for software defined networks that can sniff p
 
 ## Topology
 ![Topology](screenshots/topology.png)
-
-<!-- Order of screenshots -
-* screenshots/ryu_start.PNG
-* screenshots/starting_mininet.PNG
-* screenshots/ryu_after_mininet_start.PNG
-* screenshots/starting_sniffer.PNG
-* screenshots/ping_a1_b1.PNG
-* screenshots/ryu_after_ping_a1_b1.PNG
-* screenshots/capture_after_ping_a1_b1.PNG
-* screenshots/ping_b1_d1.PNG
-* screenshots/ryu_after_ping_b1_d1.PNG
-* screenshots/capture_after_ping_b1_d1.PNG
-* screenshots/s2_flows.PNG -->
 
 ## Environment requirements -
 * Python 3.8+ on controller machine and machine where mininet will run.
@@ -47,3 +36,16 @@ A network packet sniffer designed for software defined networks that can sniff p
     ![![packet-capture](screenshots/capture_after_ping_b1_d1.PNG)
     * Flows installed in s2
     ![s2-flows](screenshots/s2_flows.PNG)
+
+## Output
+* screenshots/ryu_start.PNG
+* screenshots/starting_mininet.PNG
+* screenshots/ryu_after_mininet_start.PNG
+* screenshots/starting_sniffer.PNG
+* screenshots/ping_a1_b1.PNG
+* screenshots/ryu_after_ping_a1_b1.PNG
+* screenshots/capture_after_ping_a1_b1.PNG
+* screenshots/ping_b1_d1.PNG
+* screenshots/ryu_after_ping_b1_d1.PNG
+* screenshots/capture_after_ping_b1_d1.PNG
+* screenshots/s2_flows.PNG
