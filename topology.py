@@ -5,7 +5,6 @@ from mininet.net import Mininet
 from mininet.log import setLogLevel
 from mininet.cli import CLI
 from mininet.node import OVSSwitch, Controller, RemoteController
-from time import sleep
 
 
 class SingleSwitchTopo(Topo):

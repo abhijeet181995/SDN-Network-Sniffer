@@ -3,22 +3,13 @@ from ryu.controller import ofp_event
 from ryu.controller.handler import CONFIG_DISPATCHER, MAIN_DISPATCHER
 from ryu.controller.handler import set_ev_cls
 from ryu.ofproto import ofproto_v1_3
-# from ryu.lib.mac import haddr_to_bin
 from ryu.lib.packet import packet
 from ryu.lib.packet import arp
 from ryu.lib.packet import ethernet
-# from ryu.lib.packet import ipv4
-# from ryu.lib.packet import ipv6
-# from ryu.lib.packet import ether_types
-# from ryu.lib import mac, ip
-# from ryu.topology.api import get_switch, get_link
-# from ryu.app.wsgi import ControllerBase
 from ryu.topology import event
 
 from collections import defaultdict
-# from operator import itemgetter
 
-# import os
 import random
 
 
@@ -40,7 +31,7 @@ class ProjectController(app_manager.RyuApp):
         self.arp_table = {}
         self.switches = []
         self.hosts = {}
-        self.multipath_group_ids = {}
+        self.multi_group_id = {}
         self.group_ids = []
         self.adjacency = defaultdict(dict)
 
@@ -88,13 +79,13 @@ class ProjectController(app_manager.RyuApp):
         '''
             Merge the switch list paths and switchwise port information
         '''
-        print("paths recived = ", paths)
+        print("paths = ", paths)
         paths_p = []
         paths_p.append(self.get_ports(paths[0],first_port,last_port))
         paths_p.append(self.get_ports(paths[1],first_port,SNIFFER_PORT))
         return paths_p
 
-    def generate_openflow_gid(self):
+    def generate_gid(self):
         '''
             Generate new group ID.
         '''
@@ -112,15 +103,17 @@ class ProjectController(app_manager.RyuApp):
         paths.append(self.bfs_shortest_path(src, dst))
         paths.append(self.bfs_shortest_path(src,SNIFFER_SWITCH))
 
-        paths_with_ports = self.add_ports_to_paths(paths, first_port, last_port)
+        paths_ports = self.add_ports_to_paths(paths, first_port, last_port)
         
-        print("paths_with_ports",paths_with_ports)
+        print("switches_with_ports",paths_ports)
         
         flat_paths = [ item for elem in paths for item in elem ]
 
-        # Iterate through all the switches present in the path
-        # if a switch is present in two paths install 
-        # a group flow at that switch else insatll a normal path.
+        '''
+        Iterate through all the switches present in the path
+        if a switch is present in two paths install 
+        a group flow at that switch else insatll a normal path.
+        '''
 
         for node in set(flat_paths):
 
@@ -131,7 +124,7 @@ class ProjectController(app_manager.RyuApp):
             ports = defaultdict(list)
             actions = []
 
-            for path in paths_with_ports:
+            for path in paths_ports:
                 if node not in path:
                     continue
                 in_port = path[node][0]
@@ -166,13 +159,13 @@ class ProjectController(app_manager.RyuApp):
                     group_id = None
                     is_group_new = False
 
-                    if (node,(src,first_port),(dst,last_port)) in self.multipath_group_ids:
+                    if (node,(src,first_port),(dst,last_port)) in self.multi_group_id:
                         pass
                     else:
                         is_group_new = True
-                        self.multipath_group_ids[node,(src,first_port),(dst,last_port)] = self.generate_openflow_gid()
+                        self.multi_group_id[node,(src,first_port),(dst,last_port)] = self.generate_gid()
                     
-                    group_id = self.multipath_group_ids[node,(src,first_port),(dst,last_port)]
+                    group_id = self.multi_group_id[node,(src,first_port),(dst,last_port)]
 
                     buckets = []
                     # print "node at ",node," out ports : ",out_ports
@@ -200,10 +193,10 @@ class ProjectController(app_manager.RyuApp):
                     self.add_flow(dp, 32768, match_ip, actions)
                     self.add_flow(dp, 1, match_arp, actions)
         
-        return paths_with_ports[0][src][1]
+        return paths_ports[0][src][1]
 
 
-#--------------------------------Add Flow Method----------------------------
+#--------------------------------Add Flow Method----------------------------------
     def add_flow(self, datapath, priority, match, actions, buffer_id=None):
         '''
             Method to add flow to switch
@@ -225,7 +218,7 @@ class ProjectController(app_manager.RyuApp):
 
     @set_ev_cls(ofp_event.EventOFPSwitchFeatures, CONFIG_DISPATCHER)
     def _switch_features_handler(self, ev):
-        print("switch_features_handler is called")
+        # print("switch_features_handler is called")
         datapath = ev.msg.datapath
         ofproto = datapath.ofproto
         parser = datapath.ofproto_parser
@@ -236,6 +229,10 @@ class ProjectController(app_manager.RyuApp):
 
     @set_ev_cls(ofp_event.EventOFPPacketIn, MAIN_DISPATCHER)
     def _packet_in_handler(self, ev):
+        '''
+            Main Handler
+        
+        '''
         msg = ev.msg
         datapath = msg.datapath
         ofproto = datapath.ofproto
