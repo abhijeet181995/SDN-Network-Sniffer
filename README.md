@@ -1,8 +1,10 @@
 # SDN-Network-Sniffer
-A network packet sniffer designed for software defined networks that can sniff packet for the whole network independent of the sniffer location.
+A network packet sniffer designed for software defined networks that can sniff packet for the whole network independent of the sniffer location.The sniffer can help us to monitor/detect malicious activities in the network.We can also debug or analyze network traffic for potensial errors.
 
 ## Features
-
+- Standard pcap format for packet capture.
+- Sniffer can be attached at any location in the network.
+- Customizaton available for types,count of packets required to be monitored across the network.
 
 ## Environment requirements -
 * Python 3.8+ on controller machine and machine where mininet will run.
