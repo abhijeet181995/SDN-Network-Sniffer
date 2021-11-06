@@ -29,12 +29,12 @@ A network packet sniffer designed for software defined networks that can sniff p
 
 ## Run commands in the order as they appear.
 * To run controller: `ryu-manager ryu-sniffer.py --observe-links`.
-    * For topology.py, switch number is `4` and sniffer port number is `1`.
+    * For topology.py, switch number is `4` and sniffer port number is `1`. <br>
     ![ryu-start](screenshots/ryu_start.PNG)
-* To run mininet topology: `sudo python3 topology.py <controller-ip>`.
+* To run mininet topology: `sudo python3 topology.py <controller-ip>`.<br>
     ![mininet-start](screenshots/starting_mininet.PNG)
     ![ryu-after-mininet-start](screenshots/ryu_after_mininet_start.PNG)
-* To start sniffer in mininet: `sniffer python3 sniff.py &`. To see options to sniff.py run `sniffer python3 sniff.py -h`
+* To start sniffer in mininet: `sniffer python3 sniff.py &`. To see options to sniff.py run `sniffer python3 sniff.py -h` <br>
     ![sniffer-start](screenshots/starting_sniffer.PNG)
 * Now exchange packets between hosts in mininet, they will be recorded by the sniffer but will not be displayed on mininet as it currently does not support background processes for hosts. 
     * `a1 ping -c 1 b1` <br>
