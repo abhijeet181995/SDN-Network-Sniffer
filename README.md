@@ -1,7 +1,3 @@
-# To-Do
-* check if `sniff.py` is working fine or not
-* Remove the comments from `ryu_sniffer.py`
-
 # SDN-Network-Sniffer
 Environment requirements -
 * Python 3.8+ on controller machine and machine where mininet will run.
