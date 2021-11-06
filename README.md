@@ -37,11 +37,11 @@ A network packet sniffer designed for software defined networks that can sniff p
 * To start sniffer in mininet: `sniffer python3 sniff.py &`. To see options to sniff.py run `sniffer python3 sniff.py -h`
     ![sniffer-start](screenshots/starting_sniffer.PNG)
 * Now exchange packets between hosts in mininet, they will be recorded by the sniffer but will not be displayed on mininet as it currently does not support background processes for hosts. 
-    * `a1 ping -c 1 b1`
+    * `a1 ping -c 1 b1` <br>
     ![ping-a1-b1](screenshots/ping_a1_b1.PNG)
     ![ryu-after-ping-a1-b1](screenshots/ryu_after_ping_a1_b1.PNG)
     ![packet-capture](screenshots/capture_after_ping_a1_b1.PNG)
-    * `b1 oing -c 2 d1`
+    * `b1 ping -c 2 d1` <br>
     ![ping-a1-b1](screenshots/ping_b1_d1.PNG)
     ![ryu-after-ping-b1-d1](screenshots/ryu_after_ping_b1_d1.PNG)
     ![![packet-capture](screenshots/capture_after_ping_b1_d1.PNG)
